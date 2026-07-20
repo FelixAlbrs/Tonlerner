@@ -3,7 +3,7 @@
 // unter public/soundfonts/. Zwischentöne werden per playbackRate leicht
 // tonhöhenverschoben (max. ~1 Halbton), das klingt natürlich.
 
-import { getContext } from './context'
+import { getContext, ensureRunning } from './context'
 
 type SampleSet = Record<number, AudioBuffer>
 
@@ -78,7 +78,7 @@ export function playSample(id: string, midi: number, opts: SampleOptions = {}): 
   }
 
   const ctx = getContext()
-  if (ctx.state === 'suspended') void ctx.resume()
+  ensureRunning()
 
   const { durationMs = 900, detuneCents = 0, gain = 0.85 } = opts
   const now = ctx.currentTime

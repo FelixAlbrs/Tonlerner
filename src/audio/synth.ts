@@ -1,6 +1,6 @@
 // Synthetische Tonerzeugung (Fallback bzw. „Synth"-Instrument).
 
-import { getContext } from './context'
+import { getContext, ensureRunning } from './context'
 import { midiToFreq } from './pitch'
 
 export type Waveform = 'sine' | 'triangle' | 'sawtooth' | 'square'
@@ -15,7 +15,7 @@ export interface SynthOptions {
 // Spielt eine Frequenz mit weicher ADSR-Hülle (kein Knacken).
 export function synthFreq(freq: number, opts: SynthOptions = {}): void {
   const c = getContext()
-  if (c.state === 'suspended') void c.resume()
+  ensureRunning()
 
   const { durationMs = 900, waveform = 'triangle', gain = 0.22 } = opts
   const now = c.currentTime
