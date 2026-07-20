@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// GitHub Pages liefert das Repo unter /tonlerner/ aus.
+// GitHub Pages liefert das Repo unter /Tonlerner/ aus (Repo-Name, Groß-/Kleinschreibung zählt).
 export default defineConfig({
-  base: '/tonlerner/',
+  base: '/Tonlerner/',
   plugins: [
     react(),
     VitePWA({
@@ -19,8 +19,8 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/tonlerner/',
-        scope: '/tonlerner/',
+        start_url: '/Tonlerner/',
+        scope: '/Tonlerner/',
         icons: [
           { src: 'icons/icon-256.png', sizes: '256x256', type: 'image/png' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },

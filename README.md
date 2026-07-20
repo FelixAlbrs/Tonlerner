@@ -39,7 +39,7 @@ Bei jedem Push auf `main` oder den Feature-Branch baut GitHub Actions die App
 und veröffentlicht sie automatisch. Die Live-URL lautet:
 
 ```
-https://felixalbrs.github.io/tonlerner/
+https://felixalbrs.github.io/Tonlerner/
 ```
 
 **Einmalig einzurichten** (im GitHub-Repo):
