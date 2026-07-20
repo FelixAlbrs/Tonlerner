@@ -39,9 +39,9 @@ export function Intonation({ settings, onBack }: { settings: Settings; onBack: (
   levelRef.current = level
 
   function playPair(question: Question) {
-    playNote(question.note, { waveform: settings.waveform, durationMs: 850 })
+    playNote(question.note, { durationMs: 850 })
     window.setTimeout(
-      () => playNote(question.note, { waveform: settings.waveform, durationMs: 850, detuneCents: question.cents }),
+      () => playNote(question.note, { durationMs: 850, detuneCents: question.cents }),
       1050,
     )
   }

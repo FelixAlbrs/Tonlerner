@@ -1,12 +1,13 @@
-// Einstellungen: Schlüssel, Notennamen, Tonumfang, Klangfarbe. Fortschritt zurücksetzen.
+// Einstellungen: Schlüssel, Notennamen, Tonumfang, Instrument. Fortschritt zurücksetzen.
 
+import { useState } from 'react'
 import type { Settings } from '../state/settings'
 import type { Clef } from '../music/Staff'
 import type { Naming } from '../audio/pitch'
-import type { Waveform } from '../audio/audioEngine'
 import { RANGE_PRESETS } from '../music/notes'
 import { resetProgress } from '../state/progress'
-import { playNote } from '../audio/audioEngine'
+import { playNote, setInstrument, loadInstrument } from '../audio/audioEngine'
+import { INSTRUMENTS } from '../audio/instruments'
 import { Card, Button } from '../components/ui'
 
 function Segmented<T extends string>({
@@ -54,6 +55,7 @@ export function SettingsPage({
   onBack: () => void
 }) {
   const set = (patch: Partial<Settings>) => onChange({ ...settings, ...patch })
+  const [previewing, setPreviewing] = useState<string | null>(null)
 
   return (
     <div className="flex min-h-full flex-col px-5 pb-10 pt-3">
@@ -104,19 +106,33 @@ export function SettingsPage({
             </div>
           </Row>
 
-          <Row label="Klangfarbe">
-            <Segmented<Waveform>
-              value={settings.waveform}
-              onChange={(v) => {
-                set({ waveform: v })
-                playNote(57, { waveform: v, durationMs: 500 }) // A2 zur Vorschau
-              }}
-              options={[
-                { value: 'sine', label: 'Weich' },
-                { value: 'triangle', label: 'Mittel' },
-                { value: 'sawtooth', label: 'Blechig' },
-              ]}
-            />
+          <Row label="Instrument">
+            <div className="grid grid-cols-2 gap-2">
+              {INSTRUMENTS.map((inst) => (
+                <button
+                  key={inst.id}
+                  onClick={async () => {
+                    set({ instrument: inst.id })
+                    setInstrument(inst.id)
+                    setPreviewing(inst.id)
+                    try {
+                      if (inst.sampled) await loadInstrument(inst.id)
+                      playNote(57, { durationMs: 900 }) // A3 zur Vorschau
+                    } finally {
+                      setPreviewing(null)
+                    }
+                  }}
+                  className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
+                    settings.instrument === inst.id ? 'bg-brand-600 text-white' : 'bg-slate-900/60 text-slate-300'
+                  }`}
+                >
+                  {previewing === inst.id ? 'lädt …' : inst.label}
+                </button>
+              ))}
+            </div>
+            <p className="mt-1 text-xs text-slate-500">
+              Echte Instrument-Aufnahmen. Beim ersten Antippen kurz laden.
+            </p>
           </Row>
         </Card>
 

@@ -57,7 +57,7 @@ export function NoteId({ settings, onBack }: { settings: Settings; onBack: () =>
     setFeedback('none')
     setAnswered(false)
     setChosen(null)
-    playSequence([anchorC, t], { waveform: settings.waveform, durationMs: 750, gapMs: 250 })
+    playSequence([anchorC, t], { durationMs: 750, gapMs: 250 })
   }
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export function NoteId({ settings, onBack }: { settings: Settings; onBack: () =>
   }, [])
 
   function replay() {
-    if (target != null) playSequence([anchor, target], { waveform: settings.waveform, durationMs: 750, gapMs: 250 })
+    if (target != null) playSequence([anchor, target], { durationMs: 750, gapMs: 250 })
   }
 
   function answer(midi: number) {
@@ -80,7 +80,7 @@ export function NoteId({ settings, onBack }: { settings: Settings; onBack: () =>
     vibrate(isCorrect ? 15 : [10, 40, 10])
     const p = recordAnswer('noteId', isCorrect)
     setLevel(p.exercises.noteId.level)
-    playNote(target, { waveform: settings.waveform, durationMs: 900 })
+    playNote(target, { durationMs: 900 })
   }
 
   return (

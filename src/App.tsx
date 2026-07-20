@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { loadSettings, saveSettings, type Settings } from './state/settings'
-import { unlockAudio } from './audio/audioEngine'
+import { unlockAudio, setInstrument } from './audio/audioEngine'
 import { Home } from './pages/Home'
 import { SettingsPage } from './pages/Settings'
 import { HigherLower } from './exercises/HigherLower'
@@ -17,6 +17,11 @@ export function App() {
   useEffect(() => {
     saveSettings(settings)
   }, [settings])
+
+  // Aktives Instrument setzen und Samples vorladen, wenn es sich ändert.
+  useEffect(() => {
+    setInstrument(settings.instrument)
+  }, [settings.instrument])
 
   const go = (s: Screen) => {
     // Jede Navigation ist ein Tap -> guter Moment, Audio für iOS freizugeben.

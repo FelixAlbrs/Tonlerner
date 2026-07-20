@@ -9,7 +9,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      // Posaune (Standard) direkt mit-precachen, damit sie sofort offline klingt.
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'soundfonts/trombone.json'],
       manifest: {
         name: 'Tonlerner',
         short_name: 'Tonlerner',
@@ -28,6 +29,18 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // Weitere Instrumente werden bei erster Nutzung heruntergeladen und
+        // dann dauerhaft gecacht (danach auch offline verfügbar).
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.includes('/soundfonts/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'tonlerner-soundfonts',
+              expiration: { maxEntries: 12, maxAgeSeconds: 60 * 60 * 24 * 120 },
+            },
+          },
+        ],
       },
     }),
   ],

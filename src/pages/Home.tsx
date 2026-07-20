@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import type { Screen } from '../App'
 import type { Settings } from '../state/settings'
 import { presetById } from '../music/notes'
+import { instrumentLabel } from '../audio/instruments'
 import { loadProgress, accuracy, type ExerciseId } from '../state/progress'
 import { Card, LevelBadge } from '../components/ui'
 
@@ -32,7 +33,8 @@ export function Home({ settings, onNavigate }: { settings: Settings; onNavigate:
         <div>
           <h1 className="text-3xl font-extrabold text-white">Tonlerner</h1>
           <p className="mt-1 text-sm text-slate-400">
-            {settings.clef === 'bass' ? 'Bassschlüssel' : 'Violinschlüssel'} · {range.label}
+            {settings.clef === 'bass' ? 'Bassschlüssel' : 'Violinschlüssel'} · {instrumentLabel(settings.instrument)} ·{' '}
+            {range.label}
           </p>
         </div>
         <button

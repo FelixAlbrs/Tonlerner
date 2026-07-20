@@ -2,20 +2,20 @@
 
 import type { Clef } from '../music/Staff'
 import type { Naming } from '../audio/pitch'
-import type { Waveform } from '../audio/audioEngine'
+import { DEFAULT_INSTRUMENT } from '../audio/instruments'
 
 export interface Settings {
   clef: Clef
   naming: Naming
   rangeId: string
-  waveform: Waveform
+  instrument: string
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   clef: 'bass', // Bassschlüssel als Voreinstellung (Posaune/Bariton)
   naming: 'de', // deutsche Notennamen (H/B)
   rangeId: 'trombone',
-  waveform: 'triangle',
+  instrument: DEFAULT_INSTRUMENT, // Posaune
 }
 
 const KEY = 'tonlerner.settings'

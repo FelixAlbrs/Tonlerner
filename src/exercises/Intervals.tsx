@@ -53,7 +53,7 @@ export function Intervals({ settings, onBack }: { settings: Settings; onBack: ()
     setFeedback('none')
     setAnswered(false)
     setChosen(null)
-    playSequence([root, root + semitones], { waveform: settings.waveform, durationMs: 720, gapMs: 140 })
+    playSequence([root, root + semitones], { durationMs: 720, gapMs: 140 })
   }
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export function Intervals({ settings, onBack }: { settings: Settings; onBack: ()
   }, [])
 
   function replay() {
-    if (q) playSequence([q.root, q.root + q.semitones], { waveform: settings.waveform, durationMs: 720, gapMs: 140 })
+    if (q) playSequence([q.root, q.root + q.semitones], { durationMs: 720, gapMs: 140 })
   }
 
   function answer(semitones: number) {

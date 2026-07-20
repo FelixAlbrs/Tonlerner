@@ -51,7 +51,7 @@ export function HigherLower({ settings, onBack }: { settings: Settings; onBack: 
     setQ(question)
     setFeedback('none')
     setAnswered(false)
-    playSequence([ref, cmp], { waveform: settings.waveform, durationMs: 700, gapMs: 160 })
+    playSequence([ref, cmp], { durationMs: 700, gapMs: 160 })
   }
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export function HigherLower({ settings, onBack }: { settings: Settings; onBack: 
   }, [])
 
   function replay() {
-    if (q) playSequence([q.ref, q.cmp], { waveform: settings.waveform, durationMs: 700, gapMs: 160 })
+    if (q) playSequence([q.ref, q.cmp], { durationMs: 700, gapMs: 160 })
   }
 
   function answer(guessUp: boolean) {
