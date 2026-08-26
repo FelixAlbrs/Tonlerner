@@ -21,6 +21,7 @@ const ITEMS: Item[] = [
   { id: 'noteId', key: 'noteId', title: 'Ton erkennen', desc: 'Töne benennen mit Notenbild', icon: '♪' },
   { id: 'intervals', key: 'intervals', title: 'Tonsprünge', desc: 'Intervalle erkennen', icon: '⤴' },
   { id: 'intonation', key: 'intonation', title: 'Intonation', desc: 'Zu hoch oder zu tief?', icon: '≈' },
+  { id: 'playback', key: 'playback', title: 'Nachspielen', desc: 'Ton hören & auf der Posaune nachspielen', icon: '🎤' },
 ]
 
 export function Home({ settings, onNavigate }: { settings: Settings; onNavigate: (s: Screen) => void }) {

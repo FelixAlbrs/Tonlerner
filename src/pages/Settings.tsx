@@ -1,6 +1,6 @@
 // Einstellungen: Schlüssel, Notennamen, Tonumfang, Instrument. Fortschritt zurücksetzen.
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { Settings } from '../state/settings'
 import type { Clef } from '../music/Staff'
 import type { Naming } from '../audio/pitch'
@@ -36,7 +36,7 @@ function Segmented<T extends string>({
   )
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-2">
       <div className="text-sm font-semibold text-slate-300">{label}</div>

@@ -7,8 +7,9 @@ import { HigherLower } from './exercises/HigherLower'
 import { NoteId } from './exercises/NoteId'
 import { Intervals } from './exercises/Intervals'
 import { Intonation } from './exercises/Intonation'
+import { PlayBack } from './exercises/PlayBack'
 
-export type Screen = 'home' | 'settings' | 'higherLower' | 'noteId' | 'intervals' | 'intonation'
+export type Screen = 'home' | 'settings' | 'higherLower' | 'noteId' | 'intervals' | 'intonation' | 'playback'
 
 export function App() {
   const [screen, setScreen] = useState<Screen>('home')
@@ -41,6 +42,7 @@ export function App() {
       {screen === 'noteId' && <NoteId settings={settings} onBack={back} />}
       {screen === 'intervals' && <Intervals settings={settings} onBack={back} />}
       {screen === 'intonation' && <Intonation settings={settings} onBack={back} />}
+      {screen === 'playback' && <PlayBack settings={settings} onBack={back} />}
     </div>
   )
 }

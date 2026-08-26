@@ -1,7 +1,7 @@
 // Lernfortschritt: Treffer/Versuche, Level und Tages-Streak pro Übung.
 // Persistiert in localStorage.
 
-export type ExerciseId = 'higherLower' | 'noteId' | 'intervals' | 'intonation'
+export type ExerciseId = 'higherLower' | 'noteId' | 'intervals' | 'intonation' | 'playback'
 
 export interface ExerciseProgress {
   correct: number
@@ -30,6 +30,7 @@ function emptyProgress(): Progress {
       noteId: emptyExercise(),
       intervals: emptyExercise(),
       intonation: emptyExercise(),
+      playback: emptyExercise(),
     },
     lastActiveDay: '',
     dayStreak: 0,
