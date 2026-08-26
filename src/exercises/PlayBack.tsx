@@ -85,14 +85,28 @@ export function PlayBack({ settings, onBack }: { settings: Settings; onBack: () 
 
   async function record() {
     if (!micSupported()) {
-      setError('Dein Browser erlaubt keinen Mikrofon-Zugriff.')
+      setError(
+        window.isSecureContext === false
+          ? 'Mikrofon braucht eine sichere Verbindung (https).'
+          : 'Dieser Browser erlaubt keinen Mikrofon-Zugriff.',
+      )
       return
     }
     setError(null)
     try {
       await startMic()
-    } catch {
-      setError('Mikrofon-Zugriff wurde abgelehnt. Bitte in den Einstellungen erlauben.')
+    } catch (e) {
+      const err = e as { name?: string; message?: string }
+      const name = err?.name ?? 'Fehler'
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        setError(
+          'Mikrofon wurde blockiert. In Safari: „aA" in der Adressleiste → Website-Einstellungen → Mikrofon → Erlauben. Danach Seite neu laden.',
+        )
+      } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+        setError('Kein Mikrofon gefunden.')
+      } else {
+        setError(`Mikrofon konnte nicht gestartet werden (${name}: ${err?.message ?? '—'}).`)
+      }
       return
     }
     setPhase('record')
