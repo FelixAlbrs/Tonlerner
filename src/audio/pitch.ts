@@ -40,6 +40,26 @@ export function noteNameWithOctave(midi: number, naming: Naming = 'de'): string 
   return `${noteName(midi, naming)}${octaveOf(midi)}`
 }
 
+// Traditionelle deutsche Schreibweise mit Oktavlage:
+// Kontra = ,B · große Oktave = B · kleine Oktave = b · darüber b¹, b².
+const OCTAVE_MARKS = ['¹', '²', '³', '⁴', '⁵']
+
+export function germanPitchLabel(midi: number): string {
+  const name = noteName(midi, 'de')
+  const oct = octaveOf(midi)
+  // Große Oktave und tiefer: Großbuchstabe, je ein Komma pro Oktave darunter.
+  if (oct <= 2) return ','.repeat(Math.max(0, 2 - oct)) + name
+  // Kleine Oktave und höher: Kleinbuchstabe, ab eingestrichen mit Ziffer.
+  const lower = name.charAt(0).toLowerCase() + name.slice(1)
+  if (oct === 3) return lower
+  return lower + (OCTAVE_MARKS[oct - 4] ?? `^${oct - 3}`)
+}
+
+// Tonbezeichnung passend zur eingestellten Benennung.
+export function pitchLabel(midi: number, naming: Naming = 'de'): string {
+  return naming === 'de' ? germanPitchLabel(midi) : noteNameWithOctave(midi, 'int')
+}
+
 // VexFlow-Schlüssel wie "eb/3".
 export function vexKey(midi: number): string {
   return `${VEX_KEYS[pitchClass(midi)]}/${octaveOf(midi)}`

@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import type { Settings } from '../state/settings'
 import type { Clef } from '../music/Staff'
-import type { Naming } from '../audio/pitch'
+import { pitchLabel, type Naming } from '../audio/pitch'
 import { RANGE_PRESETS } from '../music/notes'
 import { resetProgress } from '../state/progress'
 import { playNote, setInstrument, loadInstrument } from '../audio/audioEngine'
@@ -92,17 +92,27 @@ export function SettingsPage({
 
           <Row label="Tonumfang">
             <div className="grid grid-cols-2 gap-2">
-              {RANGE_PRESETS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => set({ rangeId: p.id })}
-                  className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
-                    settings.rangeId === p.id ? 'bg-brand-600 text-white' : 'bg-slate-900/60 text-slate-300'
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
+              {RANGE_PRESETS.map((p) => {
+                const active = settings.rangeId === p.id
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => set({ rangeId: p.id })}
+                    className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
+                      active ? 'bg-brand-600 text-white' : 'bg-slate-900/60 text-slate-300'
+                    }`}
+                  >
+                    {p.label}
+                    <span
+                      className={`mt-0.5 block text-xs font-normal ${
+                        active ? 'text-brand-100' : 'text-slate-500'
+                      }`}
+                    >
+                      {pitchLabel(p.minMidi, settings.naming)}–{pitchLabel(p.maxMidi, settings.naming)}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           </Row>
 
