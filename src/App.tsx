@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { loadSettings, saveSettings, type Settings } from './state/settings'
 import { unlockAudio, setInstrument } from './audio/audioEngine'
+import { setA4 } from './audio/pitch'
 import { Home } from './pages/Home'
 import { SettingsPage } from './pages/Settings'
 import { HigherLower } from './exercises/HigherLower'
@@ -13,11 +14,20 @@ export type Screen = 'home' | 'settings' | 'higherLower' | 'noteId' | 'intervals
 
 export function App() {
   const [screen, setScreen] = useState<Screen>('home')
-  const [settings, setSettings] = useState<Settings>(() => loadSettings())
+  const [settings, setSettings] = useState<Settings>(() => {
+    const s = loadSettings()
+    setA4(s.a4) // Kammerton sofort setzen, noch vor dem ersten Ton
+    return s
+  })
 
   useEffect(() => {
     saveSettings(settings)
   }, [settings])
+
+  // Kammerton wirkt auf Wiedergabe und Tonhöhen-Erkennung gleichermaßen.
+  useEffect(() => {
+    setA4(settings.a4)
+  }, [settings.a4])
 
   // Aktives Instrument setzen und Samples vorladen, wenn es sich ändert.
   useEffect(() => {

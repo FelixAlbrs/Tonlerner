@@ -4,6 +4,7 @@
 // tonhöhenverschoben (max. ~1 Halbton), das klingt natürlich.
 
 import { getContext, ensureRunning } from './context'
+import { a4Semitones } from './pitch'
 
 type SampleSet = Record<number, AudioBuffer>
 
@@ -86,7 +87,8 @@ export function playSample(id: string, midi: number, opts: SampleOptions = {}): 
 
   const src = ctx.createBufferSource()
   src.buffer = set[base]
-  const semitones = midi - base + detuneCents / 100
+  // Die Aufnahmen sind auf 440 Hz gestimmt -> Kammerton mit einrechnen.
+  const semitones = midi - base + detuneCents / 100 + a4Semitones()
   src.playbackRate.value = Math.pow(2, semitones / 12)
 
   const env = ctx.createGain()

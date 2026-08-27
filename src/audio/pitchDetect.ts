@@ -7,6 +7,8 @@
 //  * Die Rohkorrelation bevorzugt systematisch kleine Verschiebungen. Ohne
 //    Ausgleich landet man bei tiefen Tönen leicht eine Oktave daneben.
 
+import { getA4 } from './pitch'
+
 export const MIN_FREQ = 55 // ~A1, tiefer als das tiefste B der Posaune
 export const MAX_FREQ = 1200 // deutlich über der höchsten Übungslage
 
@@ -81,9 +83,10 @@ export function detectPitch(buf: Float32Array, sampleRate: number): number {
   return freq
 }
 
-// Frequenz -> nächste MIDI-Note + Abweichung in Cent.
+// Frequenz -> nächste MIDI-Note + Abweichung in Cent,
+// bezogen auf den eingestellten Kammerton.
 export function freqToNote(freq: number): { midi: number; cents: number } {
-  const midiFloat = 69 + 12 * Math.log2(freq / 440)
+  const midiFloat = 69 + 12 * Math.log2(freq / getA4())
   const midi = Math.round(midiFloat)
   const cents = Math.round((midiFloat - midi) * 100)
   return { midi, cents }

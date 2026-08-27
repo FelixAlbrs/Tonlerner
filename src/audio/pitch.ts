@@ -10,9 +10,35 @@ const NAMES_INT = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', '
 // VexFlow-Schlüssel (immer international, mit b für flats).
 const VEX_KEYS = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b']
 
-// Kammerton A4 = 440 Hz, MIDI 69.
+// Kammerton: Bezugsfrequenz für a¹ (MIDI 69). Alle anderen Tonhöhen leiten
+// sich daraus ab – auch das Stimm-B der Blasmusik (MIDI 58/70).
+export const DEFAULT_A4 = 440
+export const A4_MIN = 430
+export const A4_MAX = 450
+
+// Referenzton a¹ und das Stimm-B der Bläser (kleines b, 1. Lage Posaune).
+export const TUNING_A_MIDI = 69
+export const TUNING_B_MIDI = 58
+
+let a4 = DEFAULT_A4
+
+export function setA4(hz: number): void {
+  if (!Number.isFinite(hz)) return
+  a4 = Math.min(A4_MAX, Math.max(A4_MIN, hz))
+}
+
+export function getA4(): number {
+  return a4
+}
+
+// Abweichung des eingestellten Kammertons von 440 Hz, in Halbtönen.
+// Samples sind auf 440 Hz aufgenommen und werden damit nachgestimmt.
+export function a4Semitones(): number {
+  return 12 * Math.log2(a4 / DEFAULT_A4)
+}
+
 export function midiToFreq(midi: number, detuneCents = 0): number {
-  return 440 * Math.pow(2, (midi - 69 + detuneCents / 100) / 12)
+  return a4 * Math.pow(2, (midi - 69 + detuneCents / 100) / 12)
 }
 
 export function pitchClass(midi: number): number {

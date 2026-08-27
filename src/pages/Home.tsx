@@ -36,7 +36,8 @@ export function Home({ settings, onNavigate }: { settings: Settings; onNavigate:
           <h1 className="font-serif text-4xl font-bold tracking-tight text-ink-900">Tonlerner</h1>
           <p className="mt-1 text-sm text-ink-500">
             {settings.clef === 'bass' ? 'Bassschlüssel' : 'Violinschlüssel'} · {instrumentLabel(settings.instrument)} ·{' '}
-            {pitchLabel(range.minMidi, settings.naming)}–{pitchLabel(range.maxMidi, settings.naming)}
+            {pitchLabel(range.minMidi, settings.naming)}–{pitchLabel(range.maxMidi, settings.naming)} ·{' '}
+            {settings.a4} Hz
           </p>
         </div>
         <button

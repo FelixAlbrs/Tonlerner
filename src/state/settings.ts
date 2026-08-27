@@ -1,7 +1,7 @@
 // App-Einstellungen, persistiert in localStorage.
 
 import type { Clef } from '../music/Staff'
-import type { Naming } from '../audio/pitch'
+import { DEFAULT_A4, type Naming } from '../audio/pitch'
 import { DEFAULT_INSTRUMENT } from '../audio/instruments'
 
 export interface Settings {
@@ -9,6 +9,7 @@ export interface Settings {
   naming: Naming
   rangeId: string
   instrument: string
+  a4: number
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -16,6 +17,7 @@ export const DEFAULT_SETTINGS: Settings = {
   naming: 'de', // deutsche Notennamen (H/B)
   rangeId: 'trombone',
   instrument: DEFAULT_INSTRUMENT, // Posaune
+  a4: DEFAULT_A4, // Kammerton a¹
 }
 
 const KEY = 'tonlerner.settings'

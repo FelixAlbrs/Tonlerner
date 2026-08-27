@@ -3,7 +3,17 @@
 import { useState, type ReactNode } from 'react'
 import type { Settings } from '../state/settings'
 import type { Clef } from '../music/Staff'
-import { pitchLabel, type Naming } from '../audio/pitch'
+import {
+  pitchLabel,
+  midiToFreq,
+  setA4,
+  A4_MIN,
+  A4_MAX,
+  DEFAULT_A4,
+  TUNING_A_MIDI,
+  TUNING_B_MIDI,
+  type Naming,
+} from '../audio/pitch'
 import { RANGE_PRESETS } from '../music/notes'
 import { resetProgress } from '../state/progress'
 import { playNote, setInstrument, loadInstrument } from '../audio/audioEngine'
@@ -58,6 +68,16 @@ export function SettingsPage({
 }) {
   const set = (patch: Partial<Settings>) => onChange({ ...settings, ...patch })
   const [previewing, setPreviewing] = useState<string | null>(null)
+
+  // Kammerton sofort übernehmen, damit der Probeton schon richtig klingt.
+  const setKammerton = (hz: number) => {
+    const clamped = Math.min(A4_MAX, Math.max(A4_MIN, Math.round(hz)))
+    setA4(clamped)
+    set({ a4: clamped })
+  }
+
+  const hz = (midi: number) =>
+    midiToFreq(midi).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
   return (
     <div className="flex min-h-full flex-col px-5 pb-10 pt-3">
@@ -153,6 +173,80 @@ export function SettingsPage({
           </Row>
         </Card>
 
+        <Card className="space-y-5 p-4">
+          <Row label="Kammerton">
+            <div className="flex items-center justify-between gap-3">
+              <button
+                onClick={() => setKammerton(settings.a4 - 1)}
+                disabled={settings.a4 <= A4_MIN}
+                className="h-12 w-12 shrink-0 rounded-lg border border-paper-400 bg-paper-50 font-serif text-2xl text-ink-900 shadow-sheet transition active:scale-95 disabled:opacity-40"
+                aria-label="Kammerton senken"
+              >
+                −
+              </button>
+              <div className="text-center">
+                <div className="font-serif text-3xl font-bold tabular-nums text-ink-900">
+                  {settings.a4} Hz
+                </div>
+                <div className="text-xs text-ink-500">
+                  {pitchLabel(TUNING_A_MIDI, settings.naming)} – Bezugston
+                </div>
+              </div>
+              <button
+                onClick={() => setKammerton(settings.a4 + 1)}
+                disabled={settings.a4 >= A4_MAX}
+                className="h-12 w-12 shrink-0 rounded-lg border border-paper-400 bg-paper-50 font-serif text-2xl text-ink-900 shadow-sheet transition active:scale-95 disabled:opacity-40"
+                aria-label="Kammerton erhöhen"
+              >
+                +
+              </button>
+            </div>
+
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {[DEFAULT_A4, 442, 443].map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setKammerton(preset)}
+                  className={`rounded-lg border px-3 py-2 text-sm font-semibold shadow-sheet transition active:scale-95 ${
+                    settings.a4 === preset
+                      ? 'border-pencil-500 bg-pencil-100 text-ink-900'
+                      : 'border-paper-300 bg-paper-50 text-ink-700'
+                  }`}
+                >
+                  {preset} Hz
+                </button>
+              ))}
+            </div>
+          </Row>
+
+          <Row label="Stimmton anhören">
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { midi: TUNING_B_MIDI, hint: 'Blasorchester' },
+                { midi: TUNING_A_MIDI, hint: 'Sinfonieorchester' },
+              ].map((t) => (
+                <button
+                  key={t.midi}
+                  onClick={() => playNote(t.midi, { durationMs: 2600 })}
+                  className="rounded-lg border border-paper-300 bg-paper-50 px-3 py-3 shadow-sheet transition active:scale-95"
+                >
+                  <span className="block font-serif text-xl font-bold text-ink-900">
+                    {pitchLabel(t.midi, settings.naming)}
+                  </span>
+                  <span className="mt-0.5 block text-xs tabular-nums text-ink-500">{hz(t.midi)} Hz</span>
+                  <span className="block text-xs text-ink-300">{t.hint}</span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-1 text-xs italic text-ink-300">
+              Der Kammerton ist immer {pitchLabel(TUNING_A_MIDI, settings.naming)} – das ist die
+              Maßeinheit. Gestimmt wird in der Blasmusik trotzdem auf{' '}
+              {pitchLabel(TUNING_B_MIDI, settings.naming)}; dessen Frequenz ergibt sich aus dem
+              Kammerton.
+            </p>
+          </Row>
+        </Card>
+
         <Card className="p-4">
           <Row label="Fortschritt">
             <Button
@@ -168,7 +262,8 @@ export function SettingsPage({
         </Card>
 
         <p className="text-center text-xs italic text-ink-300">
-          Tonhöhen basieren auf Kammerton A = 440 Hz.
+          Alle Tonhöhen – Wiedergabe wie Mikrofon-Erkennung – basieren auf{' '}
+          {pitchLabel(TUNING_A_MIDI, settings.naming)} = {settings.a4} Hz.
           <br />
           Version {__BUILD_ID__}
         </p>
