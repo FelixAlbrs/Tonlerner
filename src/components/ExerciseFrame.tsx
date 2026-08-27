@@ -1,7 +1,7 @@
 // Gemeinsamer Rahmen für alle Übungen: Kopfzeile, Fortschritt, Inhalt.
 
 import type { ReactNode } from 'react'
-import { ScoreBar, LevelBadge } from './ui'
+import { ScoreBar, LevelBadge, StaffRule } from './ui'
 
 export function ExerciseFrame({
   title,
@@ -23,7 +23,7 @@ export function ExerciseFrame({
       <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className="rounded-lg px-2 py-1 text-slate-300 active:scale-95"
+          className="-ml-2 rounded-lg px-2 py-1 text-ink-500 transition active:scale-95"
           aria-label="Zurück"
         >
           ‹ Zurück
@@ -31,7 +31,8 @@ export function ExerciseFrame({
         <LevelBadge level={level} />
       </div>
 
-      <h1 className="mt-2 text-2xl font-bold text-white">{title}</h1>
+      <h1 className="mt-2 font-serif text-3xl font-bold tracking-tight text-ink-900">{title}</h1>
+      <StaffRule className="mt-2 opacity-70" />
 
       <div className="mt-3">
         <ScoreBar correct={correct} total={total} />

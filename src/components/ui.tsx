@@ -1,10 +1,11 @@
-// Wiederverwendbare UI-Bausteine (Buttons, Karten, Feedback, Fortschritt).
+// Wiederverwendbare UI-Bausteine im Notenpapier-Stil:
+// cremefarbenes Papier, Druckerschwärze, Rotstift als Akzent.
 
 import type { ReactNode } from 'react'
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl bg-slate-800/60 border border-slate-700/60 shadow-lg ${className}`}>
+    <div className={`rounded-lg border border-paper-300 bg-paper-50 shadow-sheet ${className}`}>
       {children}
     </div>
   )
@@ -13,11 +14,15 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 type ButtonVariant = 'primary' | 'neutral' | 'ghost' | 'success' | 'danger'
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-brand-600 hover:bg-brand-500 text-white',
-  neutral: 'bg-slate-700 hover:bg-slate-600 text-slate-100',
-  ghost: 'bg-transparent hover:bg-slate-800 text-slate-300',
-  success: 'bg-emerald-600 text-white',
-  danger: 'bg-rose-600 text-white',
+  // Rotstift: die führende Aktion.
+  primary: 'bg-pencil-500 text-paper-50 border border-pencil-600 shadow-sheet hover:bg-pencil-600',
+  // Papierkarte mit Tintenrand.
+  neutral: 'bg-paper-50 text-ink-900 border border-paper-400 shadow-sheet hover:bg-paper-100',
+  ghost: 'bg-transparent text-ink-700 border border-transparent hover:bg-paper-200',
+  // Grüne Tinte: richtig.
+  success: 'bg-quill-100 text-quill-600 border border-quill-500 shadow-sheet',
+  // Rotstift-Korrektur: falsch.
+  danger: 'bg-pencil-100 text-pencil-600 border border-pencil-400 shadow-sheet',
 }
 
 export function Button({
@@ -37,19 +42,19 @@ export function Button({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-xl px-4 py-3 text-base font-semibold transition active:scale-95 disabled:opacity-40 ${VARIANTS[variant]} ${className}`}
+      className={`rounded-lg px-4 py-3 text-base font-semibold transition active:scale-95 disabled:opacity-45 ${VARIANTS[variant]} ${className}`}
     >
       {children}
     </button>
   )
 }
 
-// Großer runder Abspiel-Button.
+// Großer runder Abspiel-Button – wie ein Notenkopf mit Rotstift-Rand.
 export function PlayButton({ onClick, label = 'Anhören' }: { onClick: () => void; label?: string }) {
   return (
     <button
       onClick={onClick}
-      className="mx-auto flex h-28 w-28 flex-col items-center justify-center rounded-full bg-brand-600 text-white shadow-xl transition active:scale-90 hover:bg-brand-500"
+      className="mx-auto flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 border-pencil-600 bg-pencil-500 text-paper-50 shadow-raised transition active:scale-90 hover:bg-pencil-600"
       aria-label={label}
     >
       <svg viewBox="0 0 24 24" className="h-10 w-10 fill-current" aria-hidden>
@@ -67,10 +72,13 @@ export function FeedbackBanner({ state, text }: { state: Feedback; text?: string
   const ok = state === 'correct'
   return (
     <div
-      className={`h-10 flex items-center justify-center rounded-xl text-base font-semibold animate-pop ${
-        ok ? 'bg-emerald-600/25 text-emerald-300' : 'bg-rose-600/25 text-rose-300'
+      className={`flex h-10 items-center justify-center gap-2 rounded-lg border text-base font-semibold animate-pop ${
+        ok
+          ? 'border-quill-500 bg-quill-100 text-quill-600'
+          : 'border-pencil-400 bg-pencil-100 text-pencil-600'
       }`}
     >
+      <span aria-hidden>{ok ? '✓' : '✗'}</span>
       {text ?? (ok ? 'Richtig!' : 'Daneben')}
     </div>
   )
@@ -81,14 +89,14 @@ export function ScoreBar({ correct, total }: { correct: number; total: number })
   const pct = total === 0 ? 0 : Math.round((correct / total) * 100)
   return (
     <div className="w-full">
-      <div className="flex justify-between text-xs text-slate-400 mb-1">
+      <div className="mb-1 flex justify-between text-xs text-ink-500">
         <span>
           {correct} / {total} richtig
         </span>
         <span>{pct}%</span>
       </div>
-      <div className="h-2 w-full rounded-full bg-slate-700 overflow-hidden">
-        <div className="h-full bg-brand-500 transition-all" style={{ width: `${pct}%` }} />
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-paper-300">
+        <div className="h-full bg-pencil-500 transition-all" style={{ width: `${pct}%` }} />
       </div>
     </div>
   )
@@ -96,8 +104,13 @@ export function ScoreBar({ correct, total }: { correct: number; total: number })
 
 export function LevelBadge({ level }: { level: number }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-brand-600/20 px-2.5 py-1 text-xs font-semibold text-brand-300">
+    <span className="inline-flex items-center gap-1 rounded-full border border-paper-400 bg-paper-200 px-2.5 py-1 font-serif text-xs font-semibold text-ink-700">
       Level {level}
     </span>
   )
+}
+
+// Fünf Notenlinien als Trenner.
+export function StaffRule({ className = '' }: { className?: string }) {
+  return <div className={`staff-rule ${className}`} aria-hidden />
 }

@@ -85,24 +85,24 @@ export function NoteId({ settings, onBack }: { settings: Settings; onBack: () =>
 
   return (
     <ExerciseFrame title="Ton erkennen" onBack={onBack} level={level} correct={correct} total={total}>
-      <p className="text-slate-400 text-sm">
+      <p className="text-sm leading-relaxed text-ink-500">
         Zuerst erklingt der <strong>Grundton</strong>, dann der gesuchte Ton. Welcher ist es?
       </p>
 
       <div className="mt-4 flex justify-center">
         <button
           onClick={replay}
-          className="rounded-full bg-slate-700 px-6 py-3 font-semibold text-slate-100 active:scale-95"
+          className="rounded-full border border-paper-400 bg-paper-50 px-6 py-3 font-semibold text-ink-900 shadow-sheet transition active:scale-95"
         >
           ↻ Nochmal anhören
         </button>
       </div>
 
-      <div className="mt-4 flex min-h-[150px] items-center justify-center rounded-2xl bg-slate-900/50">
+      <div className="mt-4 flex min-h-[150px] items-center justify-center rounded-lg border border-paper-300 bg-paper-50 shadow-sheet">
         {answered && target != null ? (
           <Staff clef={settings.clef} midis={[target]} />
         ) : (
-          <span className="text-slate-600 text-sm">Note erscheint nach der Antwort</span>
+          <span className="text-sm italic text-ink-300">Note erscheint nach der Antwort</span>
         )}
       </div>
 

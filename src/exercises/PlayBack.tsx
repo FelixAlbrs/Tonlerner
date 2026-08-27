@@ -143,7 +143,7 @@ export function PlayBack({ settings, onBack }: { settings: Settings; onBack: () 
 
   return (
     <ExerciseFrame title="Nachspielen" onBack={onBack} level={level} correct={correct} total={total}>
-      <p className="text-slate-400 text-sm">
+      <p className="text-sm leading-relaxed text-ink-500">
         Höre den Ton, dann <strong>spiel ihn auf der Posaune nach</strong>. Tippe auf „Aufnehmen" und halte
         den Ton – die App erkennt ihn.
       </p>
@@ -152,7 +152,7 @@ export function PlayBack({ settings, onBack }: { settings: Settings; onBack: () 
         <div className="mt-6 flex flex-col items-center gap-4">
           <button
             onClick={() => playTarget(target)}
-            className="rounded-full bg-slate-700 px-6 py-3 font-semibold text-slate-100 active:scale-95"
+            className="rounded-full border border-paper-400 bg-paper-50 px-6 py-3 font-semibold text-ink-900 shadow-sheet transition active:scale-95"
           >
             ↻ Ton anhören
           </button>
@@ -162,18 +162,22 @@ export function PlayBack({ settings, onBack }: { settings: Settings; onBack: () 
       {phase === 'record' && (
         <div className="mt-6 flex flex-col items-center gap-4">
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wide text-slate-500">Erkannt</div>
-            <div className={`text-5xl font-extrabold ${inTuneLive ? 'text-emerald-400' : 'text-white'}`}>
+            <div className="font-serif text-xs font-bold uppercase tracking-widest text-ink-500">Erkannt</div>
+            <div
+              className={`font-serif text-6xl font-bold leading-tight ${
+                inTuneLive ? 'text-quill-600' : 'text-ink-900'
+              }`}
+            >
               {liveMidi != null ? noteName(liveMidi, settings.naming) : '–'}
             </div>
-            <div className="h-5 text-sm text-slate-400">
+            <div className="h-5 text-sm italic text-ink-500">
               {liveMidi == null
                 ? 'Spiel einen Ton …'
                 : samePcLive
                   ? liveCents > 0
-                    ? 'etwas zu hoch'
+                    ? `etwas zu hoch (+${liveCents} ct)`
                     : liveCents < 0
-                      ? 'etwas zu tief'
+                      ? `etwas zu tief (${liveCents} ct)`
                       : 'genau!'
                   : liveCents > 0
                     ? 'zu hoch'
@@ -181,40 +185,64 @@ export function PlayBack({ settings, onBack }: { settings: Settings; onBack: () 
             </div>
           </div>
 
-          {/* Stimmanzeige */}
-          <div className="relative h-3 w-full max-w-xs rounded-full bg-slate-700">
-            <div className="absolute left-1/2 top-[-4px] h-5 w-0.5 -translate-x-1/2 bg-slate-500" />
-            <div
-              className={`absolute top-[-3px] h-4 w-4 -translate-x-1/2 rounded-full ${
-                inTuneLive ? 'bg-emerald-400' : 'bg-brand-400'
-              }`}
-              style={{ left: `${needlePct}%` }}
-            />
+          {/* Stimmanzeige: gedruckte Skala mit Rotstift-Nadel. */}
+          <div className="w-full max-w-xs">
+            <div className="relative h-14 rounded-lg border border-paper-300 bg-paper-50 shadow-sheet">
+              {/* Trefferzone in der Mitte */}
+              <div
+                className="absolute inset-y-2 left-1/2 -translate-x-1/2 rounded bg-quill-100"
+                style={{ width: `${(tol / 50) * 100}%` }}
+              />
+              {/* Skalenstriche alle 10 Cent, Mittelstrich betont */}
+              {[-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50].map((c) => (
+                <div
+                  key={c}
+                  className={`absolute -translate-x-1/2 ${
+                    c === 0 ? 'inset-y-1.5 w-0.5 bg-ink-900' : 'inset-y-4 w-px bg-ink-300'
+                  }`}
+                  style={{ left: `${((c + 50) / 100) * 100}%` }}
+                />
+              ))}
+              {/* Nadel */}
+              {liveMidi != null && (
+                <div
+                  className={`absolute inset-y-0 w-[3px] -translate-x-1/2 rounded-full transition-[left] duration-100 ${
+                    inTuneLive ? 'bg-quill-600' : 'bg-pencil-500'
+                  }`}
+                  style={{ left: `${needlePct}%` }}
+                />
+              )}
+            </div>
+            <div className="mt-1 flex justify-between px-0.5 text-[10px] uppercase tracking-widest text-ink-300">
+              <span>zu tief</span>
+              <span>rein</span>
+              <span>zu hoch</span>
+            </div>
           </div>
 
-          <div className="mt-2 flex gap-3">
+          <div className="mt-1 flex gap-3">
             <button
               onClick={() => finish(false)}
-              className="rounded-full bg-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-100 active:scale-95"
+              className="rounded-full border border-paper-400 bg-paper-50 px-5 py-2.5 text-sm font-semibold text-ink-700 shadow-sheet transition active:scale-95"
             >
               Aufgeben
             </button>
           </div>
-          <div className="text-xs text-slate-500">🎤 Mikrofon läuft …</div>
+          <div className="text-xs italic text-ink-300">🎤 Mikrofon läuft …</div>
         </div>
       )}
 
-      <div className="mt-4 flex min-h-[150px] items-center justify-center rounded-2xl bg-slate-900/50">
+      <div className="mt-4 flex min-h-[150px] items-center justify-center rounded-lg border border-paper-300 bg-paper-50 shadow-sheet">
         {phase === 'done' ? (
           <Staff clef={settings.clef} midis={[target]} />
         ) : (
-          <span className="px-4 text-center text-sm text-slate-600">
+          <span className="px-4 text-center text-sm italic text-ink-300">
             Note erscheint nach dem Versuch
           </span>
         )}
       </div>
 
-      {error && <div className="mt-3 rounded-xl bg-rose-600/20 p-3 text-sm text-rose-300">{error}</div>}
+      {error && <div className="mt-3 rounded-lg border border-pencil-400 bg-pencil-100 p-3 text-sm text-pencil-600">{error}</div>}
 
       <div className="mt-auto space-y-3 pt-4">
         <FeedbackBanner

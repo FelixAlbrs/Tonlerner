@@ -81,7 +81,7 @@ export function Intonation({ settings, onBack }: { settings: Settings; onBack: (
 
   return (
     <ExerciseFrame title="Intonation" onBack={onBack} level={level} correct={correct} total={total}>
-      <p className="text-slate-400 text-sm">
+      <p className="text-sm leading-relaxed text-ink-500">
         Erst der saubere Ton, dann derselbe Ton leicht verstimmt. War der <strong>zweite</strong> Ton zu
         hoch oder zu tief?
       </p>
@@ -89,7 +89,7 @@ export function Intonation({ settings, onBack }: { settings: Settings; onBack: (
       <div className="mt-8 flex justify-center">
         <button
           onClick={replay}
-          className="rounded-full bg-slate-700 px-6 py-3 font-semibold text-slate-100 active:scale-95"
+          className="rounded-full border border-paper-400 bg-paper-50 px-6 py-3 font-semibold text-ink-900 shadow-sheet transition active:scale-95"
         >
           ↻ Nochmal anhören
         </button>

@@ -8,7 +8,7 @@ import { RANGE_PRESETS } from '../music/notes'
 import { resetProgress } from '../state/progress'
 import { playNote, setInstrument, loadInstrument } from '../audio/audioEngine'
 import { INSTRUMENTS } from '../audio/instruments'
-import { Card, Button } from '../components/ui'
+import { Card, Button, StaffRule } from '../components/ui'
 
 function Segmented<T extends string>({
   value,
@@ -20,13 +20,15 @@ function Segmented<T extends string>({
   onChange: (v: T) => void
 }) {
   return (
-    <div className="flex gap-1 rounded-xl bg-slate-900/60 p-1">
+    <div className="flex gap-1 rounded-lg border border-paper-300 bg-paper-200 p-1">
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${
-            value === o.value ? 'bg-brand-600 text-white' : 'text-slate-300'
+            value === o.value
+              ? 'bg-paper-50 text-ink-900 shadow-sheet border border-paper-400'
+              : 'text-ink-500 border border-transparent'
           }`}
         >
           {o.label}
@@ -39,7 +41,7 @@ function Segmented<T extends string>({
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-2">
-      <div className="text-sm font-semibold text-slate-300">{label}</div>
+      <div className="font-serif text-sm font-bold uppercase tracking-widest text-ink-500">{label}</div>
       {children}
     </div>
   )
@@ -60,11 +62,12 @@ export function SettingsPage({
   return (
     <div className="flex min-h-full flex-col px-5 pb-10 pt-3">
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="rounded-lg px-2 py-1 text-slate-300 active:scale-95">
+        <button onClick={onBack} className="-ml-2 rounded-lg px-2 py-1 text-ink-500 transition active:scale-95">
           ‹ Zurück
         </button>
       </div>
-      <h1 className="mt-2 text-2xl font-bold text-white">Einstellungen</h1>
+      <h1 className="mt-2 font-serif text-3xl font-bold tracking-tight text-ink-900">Einstellungen</h1>
+      <StaffRule className="mt-2 opacity-70" />
 
       <div className="mt-6 space-y-5">
         <Card className="space-y-5 p-4">
@@ -98,14 +101,16 @@ export function SettingsPage({
                   <button
                     key={p.id}
                     onClick={() => set({ rangeId: p.id })}
-                    className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
-                      active ? 'bg-brand-600 text-white' : 'bg-slate-900/60 text-slate-300'
+                    className={`rounded-lg border px-3 py-3 text-sm font-semibold shadow-sheet transition active:scale-95 ${
+                      active
+                        ? 'border-pencil-500 bg-pencil-100 text-ink-900'
+                        : 'border-paper-300 bg-paper-50 text-ink-700'
                     }`}
                   >
                     {p.label}
                     <span
                       className={`mt-0.5 block text-xs font-normal ${
-                        active ? 'text-brand-100' : 'text-slate-500'
+                        active ? 'text-pencil-600' : 'text-ink-300'
                       }`}
                     >
                       {pitchLabel(p.minMidi, settings.naming)}–{pitchLabel(p.maxMidi, settings.naming)}
@@ -132,15 +137,17 @@ export function SettingsPage({
                       setPreviewing(null)
                     }
                   }}
-                  className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
-                    settings.instrument === inst.id ? 'bg-brand-600 text-white' : 'bg-slate-900/60 text-slate-300'
+                  className={`rounded-lg border px-3 py-3 text-sm font-semibold shadow-sheet transition active:scale-95 ${
+                    settings.instrument === inst.id
+                      ? 'border-pencil-500 bg-pencil-100 text-ink-900'
+                      : 'border-paper-300 bg-paper-50 text-ink-700'
                   }`}
                 >
                   {previewing === inst.id ? 'lädt …' : inst.label}
                 </button>
               ))}
             </div>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs italic text-ink-300">
               Echte Instrument-Aufnahmen. Beim ersten Antippen kurz laden.
             </p>
           </Row>
@@ -160,7 +167,7 @@ export function SettingsPage({
           </Row>
         </Card>
 
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs italic text-ink-300">
           Tonhöhen basieren auf Kammerton A = 440 Hz.
           <br />
           Version {__BUILD_ID__}

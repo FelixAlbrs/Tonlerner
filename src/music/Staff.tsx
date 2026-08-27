@@ -22,7 +22,7 @@ function noteFor(midi: number, clef: Clef): StaveNote {
   return note
 }
 
-export function Staff({ clef, midis, color = '#e2e8f0', width = 260, height = 140 }: StaffProps) {
+export function Staff({ clef, midis, color = '#14110d', width = 260, height = 140 }: StaffProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
