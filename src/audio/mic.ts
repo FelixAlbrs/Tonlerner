@@ -2,7 +2,7 @@
 // Der Analyser wird NICHT an die Ausgabe gehängt (keine Rückkopplung).
 
 import { getContext, ensureRunning, setSessionMode } from './context'
-import { autoCorrelate } from './pitchDetect'
+import { detectPitch } from './pitchDetect'
 
 let stream: MediaStream | null = null
 let source: MediaStreamAudioSourceNode | null = null
@@ -41,7 +41,9 @@ export async function startMic(): Promise<void> {
 
   source = ctx.createMediaStreamSource(stream)
   analyser = ctx.createAnalyser()
-  analyser.fftSize = 2048
+  // ~93 ms Analysefenster: genug Schwingungen auch für das tiefe B (58 Hz),
+  // wo 2048 Samples nur knapp drei Perioden erfassen würden.
+  analyser.fftSize = 4096
   buffer = new Float32Array(analyser.fftSize)
   source.connect(analyser)
 }
@@ -50,7 +52,7 @@ export async function startMic(): Promise<void> {
 export function detectFrequency(): number {
   if (!analyser || !buffer) return -1
   analyser.getFloatTimeDomainData(buffer)
-  return autoCorrelate(buffer, getContext().sampleRate)
+  return detectPitch(buffer, getContext().sampleRate)
 }
 
 export function stopMic(): void {

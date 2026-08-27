@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:pitch": "esbuild src/audio/pitchDetect.ts --bundle --format=esm --outfile=node_modules/.tmp/pitchDetect.mjs && node scripts/pitch-test.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
