@@ -5,7 +5,15 @@ import { detectPitch, freqToNote } from '../node_modules/.tmp/pitchDetect.mjs'
 const SR = 44100
 const N = 4096
 
-const NAMES = { 34: 'B1 (tief)', 40: 'E2', 46: 'Bb2', 52: 'E3', 58: 'Bb3', 65: 'F4' }
+// Deutsche Tonbezeichnungen (Bassschlüssel-Denke), inkl. Lage auf der Posaune.
+const NAMES = {
+  34: 'Kontra-B (Pedal)',
+  40: 'großes E (7. Lage)',
+  46: 'großes B (1. Lage)',
+  52: 'kleines e',
+  58: 'kleines b',
+  65: 'f¹',
+}
 const midiToFreq = (m) => 440 * Math.pow(2, (m - 69) / 12)
 
 // Blechbläser-ähnlicher Ton: Grundton + Obertöne.
@@ -54,7 +62,7 @@ function run(label, opts) {
     const ok = noteOk && detectedAny && Math.abs(worstCents) < 25
     if (!ok) allOk = false
     console.log(
-      `  ${String(NAMES[midi]).padEnd(11)} ${expected.toFixed(1).padStart(6)} Hz  ` +
+      `  ${String(NAMES[midi]).padEnd(19)} ${expected.toFixed(1).padStart(6)} Hz  ` +
         `Note ${noteOk && detectedAny ? 'korrekt' : 'FALSCH '}  ` +
         `max. Abweichung ${worstCents.toFixed(1).padStart(6)} Cent  ${ok ? 'OK' : 'FEHLER'}`,
     )
