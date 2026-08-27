@@ -152,6 +152,8 @@ export function SettingsPage({
 
         <p className="text-center text-xs text-slate-500">
           Tonhöhen basieren auf Kammerton A = 440 Hz.
+          <br />
+          Version {__BUILD_ID__}
         </p>
       </div>
     </div>

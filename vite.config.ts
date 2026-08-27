@@ -2,9 +2,15 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Baustempel, damit in der App sichtbar ist, welche Version läuft.
+const BUILD_ID = new Date().toISOString().slice(0, 16).replace('T', ' ')
+
 // GitHub Pages liefert das Repo unter /Tonlerner/ aus (Repo-Name, Groß-/Kleinschreibung zählt).
 export default defineConfig({
   base: '/Tonlerner/',
+  define: {
+    __BUILD_ID__: JSON.stringify(BUILD_ID),
+  },
   plugins: [
     react(),
     VitePWA({
@@ -29,6 +35,12 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // Neue Version sofort übernehmen (iOS hält den Cache sonst sehr lange).
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+        // index.html nie aus dem Cache ausliefern, sonst bleibt die App alt.
+        navigateFallback: 'index.html',
         // Weitere Instrumente werden bei erster Nutzung heruntergeladen und
         // dann dauerhaft gecacht (danach auch offline verfügbar).
         runtimeCaching: [
